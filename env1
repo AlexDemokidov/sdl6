@@ -1,0 +1,7 @@
+INTERVAL=5
+LOG_FILE_PATH=app.log
+VAULT_ADDR=http://sdl6-hashicorp-1:8200
+APPROLE_ROLE_ID=ce39f085-9e92-f590-6f2b-60b355756558
+SECRET_PATH=db_credentials
+SECRET_MOUNT=secret
+WRAPPING_TOKEN="ТУТ ТОКЕН"
