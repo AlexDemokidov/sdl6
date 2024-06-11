@@ -14,5 +14,13 @@ pipeline{
         }
       }
     }
+    stage('Push image to Docker Hub') {
+      steps {
+        sh 'echo Push image to a Docker Hub'
+        docker.withRegistry('https://registry.hub.docker.com', 'alexdemokidov') {
+          app.push("latest")
+        }
+      }
+    }
   }
 }
