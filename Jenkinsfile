@@ -10,7 +10,7 @@ pipeline{
       steps {
         script {
           sh 'echo Build application image'
-          def app = docker.build("pinger", "./dotnet/PgConnect")
+          app = docker.build("pinger", "./dotnet/PgConnect")
         }
       }
     }
