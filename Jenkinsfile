@@ -10,7 +10,7 @@ pipeline{
       steps {
         script {
           sh 'echo Build application image'
-          app = docker.build("pinger", "./dotnet/PgConnect")
+          app = docker.build("alexdemokidov/pinger", "./dotnet/PgConnect")
         }
       }
     }
@@ -18,7 +18,7 @@ pipeline{
       steps {
         script {
           sh 'echo Push image to a Docker Hub'
-          docker.withRegistry('https://registry.hub.docker.com/alexdemokidov', 'alexdemokidov') {
+          docker.withRegistry('', 'alexdemokidov') {
             app.push("latest")
           }
         }
