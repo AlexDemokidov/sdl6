@@ -9,7 +9,7 @@ pipeline{
     stage('Build Image') {
       steps {
         sh 'echo Build application image'
-        app = docker.build("sdl6/dotnet/PgConnect", ".")
+        app = docker.build("pinger", "./dotnet/PgConnect")
       }
     }
   }
