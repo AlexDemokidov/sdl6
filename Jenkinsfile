@@ -8,8 +8,10 @@ pipeline{
     }
     stage('Build Image') {
       steps {
-        sh 'echo Build application image'
-        def app = docker.build("pinger", "./dotnet/PgConnect")
+        script {
+          sh 'echo Build application image'
+          def app = docker.build("pinger", "./dotnet/PgConnect")
+        }
       }
     }
   }
