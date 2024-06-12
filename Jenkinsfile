@@ -63,7 +63,7 @@ pipeline {
 
           // Analyze and fail on critical or high vulnerabilities
           // sh 'docker-scout cves $IMAGE_TAG --exit-code --only-severity critical,high'
-          sh 'docker-scout cves $IMAGE_TAG'
+          sh 'docker-scout cves $IMAGE_TAG --only-severity critical,high'
         }
       }
     }
@@ -71,15 +71,15 @@ pipeline {
       steps {
         script {
           sh 'echo Trivy check'
-          // sh 'trivy image --exit-code 1 --severity CRITICAL,HIGH alexdemokidov/pinger:latest'
-          sh 'trivy image $IMAGE_TAG'
+          // sh 'trivy image --exit-code 1 --severity CRITICAL,HIGH $IMAGE_TAG'
+          sh 'trivy image -f json -o results.json --severity CRITICAL,HIGH $IMAGE_TAG'
         }
       }
     }
     stage('DefectDojoPublisher') {
       steps {
         withCredentials([string(credentialsId: 'DEFECT_DOJO_KEY', variable: 'API_KEY')]) {
-          defectDojoPublisher(artifact: 'target/dependency-check-report.xml', productName: 'SDL6', scanType: 'Dependency Check Scan', engagementName: 'ci/cd', defectDojoCredentialsId: API_KEY, sourceCodeUrl: 'https://github.com/AlexDemokidov/sdl6.git', branchTag: 'main')
+          defectDojoPublisher(artifact: 'results.json', productName: 'SDL6', scanType: 'Dependency Check Scan', engagementName: 'ci/cd', defectDojoCredentialsId: API_KEY, sourceCodeUrl: 'https://github.com/AlexDemokidov/sdl6.git', branchTag: 'main')
         }
       }
     }
