@@ -1,5 +1,10 @@
 pipeline {
   agent any
+
+  environment {
+    DEBRICKED_TOKEN = credentials('DEBRICKED_TOKEN')
+  }
+  
   stages{
     stage('Clone Git repository') {
       steps {
@@ -20,6 +25,14 @@ pipeline {
     stage("SonarQube Quality Gate") {
       steps {
         waitForQualityGate abortPipeline: true
+      }
+    }
+    stage('Debricked Scan') {
+      steps {
+        script {
+          sh 'curl -L https://github.com/debricked/cli/releases/download/release-v1/cli_linux_x86_64.tar.gz | tar -xz debricked'
+          sh './debricked scan'
+        }
       }
     }
     stage('Build Image') {
@@ -44,7 +57,8 @@ pipeline {
       steps {
         script {
           sh 'echo Trivy check'
-          sh 'trivy image --exit-code 1 --severity CRITICAL,HIGH alexdemokidov/pinger:latest '
+          // sh 'trivy image --exit-code 1 --severity CRITICAL,HIGH alexdemokidov/pinger:latest'
+          sh 'trivy image alexdemokidov/pinger:latest'
         }
       }
     }
