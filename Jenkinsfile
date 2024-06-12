@@ -72,8 +72,7 @@ pipeline {
         script {
           sh 'echo Trivy check'
           // sh 'trivy image --exit-code 1 --severity CRITICAL,HIGH $IMAGE_TAG'
-          sh 'trivy image -f json -o results.json --severity CRITICAL,HIGH $IMAGE_TAG'
-          sh 'echo Hello > results.xml'
+          sh 'trivy image -f xml -o results.xml --severity CRITICAL,HIGH $IMAGE_TAG'
         }
       }
     }
