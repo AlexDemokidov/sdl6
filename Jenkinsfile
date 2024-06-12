@@ -3,6 +3,8 @@ pipeline {
 
   environment {
     DEBRICKED_TOKEN = credentials('DEBRICKED_TOKEN')
+    DOCKER_HUB = credentials('alexdemokidov')
+    IMAGE_TAG  = 'alexdemokidov/pinger:latest'
   }
   
   stages{
@@ -11,7 +13,7 @@ pipeline {
         checkout scm
       }
     }
-    stage('SonarQube analysis') {
+    stage('SAST SonarQube analysis') {
       steps {
         script {
           sh 'echo Run SAST - SonarQube analysis'
@@ -27,7 +29,7 @@ pipeline {
         waitForQualityGate abortPipeline: true
       }
     }
-    stage('Debricked Scan') {
+    stage('SCA with Debricked') {
       steps {
         script {
           sh 'curl -L https://github.com/debricked/cli/releases/download/release-v1/cli_linux_x86_64.tar.gz | tar -xz debricked'
@@ -53,12 +55,26 @@ pipeline {
         }
       }
     }
-    stage('Trivy analysis') {
+    stage('Analyze image with Docker Scout') {
+      steps {
+        script {
+          // Install Docker Scout
+          sh 'curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | sh -s -- -b /usr/local/bin'
+
+          // Log into Docker Hub
+          sh 'echo $DOCKER_HUB_PSW | docker login -u $DOCKER_HUB_USR --password-stdin'
+
+          // Analyze and fail on critical or high vulnerabilities
+          sh 'docker-scout cves $IMAGE_TAG --exit-code --only-severity critical,high'
+        }
+      }
+    }
+    stage('Binary SCA analysis with Trivy') {
       steps {
         script {
           sh 'echo Trivy check'
           // sh 'trivy image --exit-code 1 --severity CRITICAL,HIGH alexdemokidov/pinger:latest'
-          sh 'trivy image alexdemokidov/pinger:latest'
+          sh 'trivy image $IMAGE_TAG'
         }
       }
     }
