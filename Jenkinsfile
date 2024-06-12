@@ -40,5 +40,13 @@ pipeline {
         }
       }
     }
+    stage('Trivy analysis') {
+      steps {
+        script {
+          sh 'echo Trivy check'
+          sh 'trivy image --exit-code 1 --severity CRITICAL,HIGH alexdemokidov/pinger:latest '
+        }
+      }
+    }
   }
 }
