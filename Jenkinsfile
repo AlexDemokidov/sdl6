@@ -1,4 +1,4 @@
-pipeline{
+pipeline {
   agent any
   stages{
     stage('Clone Git repository') {
@@ -22,6 +22,22 @@ pipeline{
             app.push("latest")
           }
         }
+      }
+    }
+    stage('SonarQube analysis') {
+      steps {
+        script {
+          sh 'echo Run SAST - SonarQube analysis'
+          def scannerHome = tool 'sonar_scanner';
+          withSonarQubeEnv() {
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=myapp"
+          }
+        }
+      }
+    }
+    stage("SonarQube Quality Gate") {
+      steps {
+        waitForQualityGate abortPipeline: true
       }
     }
   }
