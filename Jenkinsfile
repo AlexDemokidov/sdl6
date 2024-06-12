@@ -30,7 +30,7 @@ pipeline {
           sh 'echo Run SAST - SonarQube analysis'
           def scannerHome = tool 'sonar_scanner';
           withSonarQubeEnv() {
-            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=myapp"
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=SDL6"
           }
         }
       }
