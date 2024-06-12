@@ -79,7 +79,7 @@ pipeline {
     stage('DefectDojoPublisher') {
       steps {
         withCredentials([string(credentialsId: 'DEFECT_DOJO_KEY', variable: 'API_KEY')]) {
-          defectDojoPublisher(artifact: 'target/dependency-check-report.xml', productName: 'SDL6', scanType: 'Dependency Check Scan', engagementName: 'ci/cd', defectDojoCredentialsId: API_KEY, sourceCodeUri: 'https://github.com/AlexDemokidov/sdl6.git', branchTag: 'main')
+          defectDojoPublisher(artifact: 'target/dependency-check-report.xml', productName: 'SDL6', scanType: 'Dependency Check Scan', engagementName: 'ci/cd', defectDojoCredentialsId: API_KEY, sourceCodeUrl: 'https://github.com/AlexDemokidov/sdl6.git', branchTag: 'main')
         }
       }
     }
