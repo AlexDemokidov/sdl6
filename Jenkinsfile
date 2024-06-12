@@ -58,9 +58,6 @@ pipeline {
     stage('Analyze image with Docker Scout') {
       steps {
         script {
-          // Install Docker Scout
-          sh 'curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | sh -s -- -b /usr/local/bin'
-
           // Log into Docker Hub
           sh 'echo $DOCKER_HUB_PSW | docker login -u $DOCKER_HUB_USR --password-stdin'
 
