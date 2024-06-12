@@ -5,7 +5,6 @@ pipeline {
     DEBRICKED_TOKEN = credentials('DEBRICKED_TOKEN')
     DOCKER_HUB = credentials('alexdemokidov')
     IMAGE_TAG  = 'alexdemokidov/pinger:latest'
-    DEFECT_DOJO_KEY = credentials('DEFECT_DOJO_KEY')
   }
   
   stages{
@@ -80,7 +79,7 @@ pipeline {
     stage('DefectDojoPublisher') {
       steps {
         withCredentials([string(credentialsId: 'DEFECT_DOJO_KEY', variable: 'API_KEY')]) {
-          defectDojoPublisher(artifact: 'results.json', productName: 'SDL6', scanType: 'Dependency Check Scan', engagementName: 'ci/cd', defectDojoCredentialsId: $DEFECT_DOJO_KEY, sourceCodeUrl: 'https://github.com/AlexDemokidov/sdl6.git', branchTag: 'main')
+          defectDojoPublisher(artifact: 'results.json', productName: 'SDL6', scanType: 'Dependency Check Scan', engagementName: 'ci/cd', defectDojoCredentialsId: API_KEY, sourceCodeUrl: 'https://github.com/AlexDemokidov/sdl6.git', branchTag: 'main')
         }
       }
     }
